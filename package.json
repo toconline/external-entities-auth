@@ -4,6 +4,9 @@
   "description": "External entities authentication",
   "main": "external-entities-auth.js",
   "dependencies": {
+    "@casper2020/casper-notice": "^1.x",
+    "@polymer/paper-checkbox": "^3.1.0",
+    "@polymer/paper-input": "^3.0.2",
     "@polymer/polymer": "^3.0.0"
   }
 }
