@@ -54,10 +54,10 @@ class AtLogin extends ExternalEntitiesAuth {
 
       <div class="container-input">
         <paper-input
-          id="entityTaxRegistrationNumber"
+          id="entityUsername"
           class="login-input"
           label="NIF do sujeito passivo"
-          value="{{entityTaxRegistrationNumber}}"
+          value="{{entityUsername}}"
           error-message="NIF inválido"
           allowed-pattern="[0-9]|\/"
           auto-validate
@@ -86,10 +86,10 @@ class AtLogin extends ExternalEntitiesAuth {
       </div>
       <div id="containerAccountant" class="container-input-accountant">
         <paper-input
-          id="accountantTaxRegistrationNumber"
+          id="accountantUsername"
           class="login-input"
           label="NIF do contabilista"
-          value="{{accountantTaxRegistrationNumber}}"
+          value="{{accountantUsername}}"
           error-message="NIF inválido"
           allowed-pattern="[0-9]|\/"
           auto-validate
@@ -121,7 +121,7 @@ class AtLogin extends ExternalEntitiesAuth {
 
   static get properties() {
     return {
-      entityTaxRegistrationNumber: {
+      entityUsername: {
         type: String,
         notify: true
       },
@@ -136,7 +136,7 @@ class AtLogin extends ExternalEntitiesAuth {
         type: Boolean,
         value: false
       },
-      accountantTaxRegistrationNumber: {
+      accountantUsername: {
         type: String,
         notify: true
       },
@@ -187,10 +187,10 @@ class AtLogin extends ExternalEntitiesAuth {
       const entityLogin = await this._checkVaultLoginAccess('AT', 'entity');
 
       if (entityLogin['auto-login']) {
-        this.entityTaxRegistrationNumber = entityLogin.username;
+        this.entityUsername = entityLogin.username;
         this.entityPassword = this._generateFakePassword();
         this.entityUseFromVault = true;
-        this.$.entityTaxRegistrationNumber.readonly = false;
+        this.$.entityUsername.readonly = false;
         this.$.entityPassword.readonly = true;
       } else {
         this._addPassword('AT', 'entity');
@@ -202,7 +202,7 @@ class AtLogin extends ExternalEntitiesAuth {
         const accountantLogin = await this._checkVaultLoginAccess('AT', 'accountant');
 
         if (accountantLogin['auto-login']) {
-          this.accountantTaxRegistrationNumber = accountantLogin.username;
+          this.accountantUsername = accountantLogin.username;
           this.accountantPassword = this._generateFakePassword();
           this.accountantUseFromVault = true;
           this.$.accountantPassword.readonly = true;
@@ -220,7 +220,7 @@ class AtLogin extends ExternalEntitiesAuth {
     let errorMessages = [];
 
     if (this.submittedByAccountant === true) {
-      if (this.accountantTaxRegistrationNumber === null || this.accountantTaxRegistrationNumber.length === 0) {
+      if (this.accountantUsername === null || this.accountantUsername.length === 0) {
         errorMessages.push('O NIF do contabilista é de preenchimento obrigatório.');
       }
 
@@ -262,10 +262,10 @@ class AtLogin extends ExternalEntitiesAuth {
 
   _checkedAuthorizedAccountant(value) {
     if (value === true) {
-      this.$.entityTaxRegistrationNumber.disabled = true;
+      this.$.entityUsername.disabled = true;
       this.$.entityPassword.disabled = true;
     } else {
-      this.$.entityTaxRegistrationNumber.disabled = false;
+      this.$.entityUsername.disabled = false;
       this.$.entityPassword.disabled = false;
     }
   }
