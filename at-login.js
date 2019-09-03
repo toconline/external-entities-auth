@@ -61,7 +61,6 @@ class AtLogin extends ExternalEntitiesAuth {
           error-message="NIF inválido"
           allowed-pattern="[0-9]|\/"
           auto-validate
-          readonly
         >
         </paper-input>
         <paper-input
@@ -159,10 +158,6 @@ class AtLogin extends ExternalEntitiesAuth {
         type: Boolean,
         default: false
       },
-      minPasswordLength: {
-        type: Number,
-        value: 4
-      },
       withAccountantPassword: {
         type: Boolean,
         default: false
@@ -190,7 +185,6 @@ class AtLogin extends ExternalEntitiesAuth {
         this.entityUsername = entityLogin.username;
         this.entityPassword = this._generateFakePassword();
         this.entityUseFromVault = true;
-        this.$.entityUsername.readonly = false;
         this.$.entityPassword.readonly = true;
       } else {
         this._addPassword('AT', 'entity');
@@ -268,14 +262,6 @@ class AtLogin extends ExternalEntitiesAuth {
       this.$.entityUsername.disabled = false;
       this.$.entityPassword.disabled = false;
     }
-  }
-
-  _generateFakePassword() {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  }
-
-  _btoaPassword(password) {
-    return btoa(password);
   }
 }
 

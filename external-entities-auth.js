@@ -14,20 +14,16 @@ export class ExternalEntitiesAuth extends PolymerElement {
       _storePasswords: {
         type: Boolean,
         value: false
+      },
+      minPasswordLength: {
+        type: Number,
+        value: 4
       }
     };
   }
 
   async _checkVaultLoginAccess(entity, type) {
     return await this.app.vault.checkLoginAccess(entity, type);
-  }
-
-  _addPassword(entity, type) {
-    this._savePasswords.push({ entity: entity, type: type });
-  }
-
-  _removePassword(entity, type) {
-    this._savePasswords.splice(this._savePasswords.findIndex(password => password.entity == entity && password.type == type), 1);
   }
 
   async showSavePasswordsAlert() {
@@ -55,6 +51,22 @@ export class ExternalEntitiesAuth extends PolymerElement {
     }
 
     return [];
+  }
+
+  _addPassword(entity, type) {
+    this._savePasswords.push({ entity: entity, type: type });
+  }
+
+  _removePassword(entity, type) {
+    this._savePasswords.splice(this._savePasswords.findIndex(password => password.entity == entity && password.type == type), 1);
+  }
+
+  _generateFakePassword() {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
+
+  _btoaPassword(password) {
+    return btoa(password);
   }
 }
 
