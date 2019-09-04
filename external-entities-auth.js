@@ -1,4 +1,5 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
+import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 
 export class ExternalEntitiesAuth extends PolymerElement {
   static get is() {
@@ -20,6 +21,15 @@ export class ExternalEntitiesAuth extends PolymerElement {
         value: 4
       }
     };
+  }
+
+  ready() {
+    super.ready();
+    afterNextRender(this, () => {
+      if (this.parentElement.wizard) {
+        this.getVaultData();
+      }
+    });
   }
 
   async _checkVaultLoginAccess(entity, type) {

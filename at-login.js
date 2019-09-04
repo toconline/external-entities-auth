@@ -1,6 +1,5 @@
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 import { ExternalEntitiesAuth } from './external-entities-auth.js';
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@casper2020/casper-notice/casper-notice.js';
@@ -170,11 +169,6 @@ class AtLogin extends ExternalEntitiesAuth {
       '_checkedSubmittedByAccountant(submittedByAccountant)',
       '_checkedAuthorizedAccountant(authorizedAccountant)'
     ]
-  }
-
-  ready() {
-    super.ready();
-    afterNextRender(this, () => this.getVaultData());
   }
 
   async getVaultData () {

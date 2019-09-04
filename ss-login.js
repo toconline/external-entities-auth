@@ -1,6 +1,5 @@
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 import { ExternalEntitiesAuth } from './external-entities-auth.js';
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import '@polymer/paper-input/paper-input.js';
 import '@casper2020/casper-notice/casper-notice.js';
 
@@ -107,11 +106,6 @@ class SsLogin extends ExternalEntitiesAuth {
         type: Number
       }
     };
-  }
-
-  ready() {
-    super.ready();
-    afterNextRender(this, () => this.getVaultData());
   }
 
   async getVaultData () {
