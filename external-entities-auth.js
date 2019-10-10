@@ -37,20 +37,22 @@ export class ExternalEntitiesAuth extends PolymerElement {
   }
 
   async showSavePasswordsAlert() {
-    if (this._savePasswords.length > 0) {
-      try {
-        await this.app.showAlert({
-          title: 'Detetadas novas senhas',
-          message: `Pretende gravar as novas senhas detetadas para utilização futura no sistema?`,
-          accept: 'Sim',
-          reject: 'Não'
-        });
-        this._storePasswords = true;
-      } catch (error) {
-        this._storePasswords = false;
-        this._savePasswords = [];
-      }
-    }
+    this._storePasswords = false;
+    this._savePasswords  = [];
+    // if (this._savePasswords.length > 0) {
+    //   try {
+    //     await this.app.showAlert({
+    //       title: 'Detetadas novas senhas',
+    //       message: `Pretende gravar as novas senhas detetadas para utilização futura no sistema?`,
+    //       accept: 'Sim',
+    //       reject: 'Não'
+    //     });
+    //     this._storePasswords = true;
+    //   } catch (error) {
+    //     this._storePasswords = false;
+    //     this._savePasswords = [];
+    //   }
+    // }
 
     return true;
   }
