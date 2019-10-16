@@ -184,7 +184,7 @@ class AtLogin extends ExternalEntitiesAuth {
         this._addPassword('AT', 'entity');
       }
 
-      if (this.isAccountant() && this.withAccountantPassword) {
+      if ((this.isAccountant() || this.isCompanyAccountant()) && this.withAccountantPassword) {
         this.$.containerCheckbox.style.display = 'block';
 
         const accountantLogin = await this._checkVaultLoginAccess('AT', 'accountant');
@@ -202,6 +202,10 @@ class AtLogin extends ExternalEntitiesAuth {
 
   isAccountant() {
     return ((this.app.role_mask & 4) > 0 ? true : false);
+  }
+
+  isCompanyAccountant() {
+    return ((this.app.role_mask & 1024) > 0 ? true : false);
   }
 
   checkCredentials() {
