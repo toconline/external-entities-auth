@@ -51,6 +51,9 @@ class AtLogin extends ExternalEntitiesAuth {
         }
       </style>
 
+      <template is="dom-if" if="[[_readonly]]">
+        <casper-notice type="warning">Para modificar os campos que se encontram bloqueados poderá fazê-lo na opção de menu <i>Senhas da Empresa</i></casper-notice>
+      </template>
       <div class="container-input">
         <paper-input
           id="entityUsername"
@@ -99,8 +102,8 @@ class AtLogin extends ExternalEntitiesAuth {
           class="password-input"
           label="Senha do contabilista"
           value="{{accountantPassword}}"
+          error-message="Palavra chave demasiado curta"
           minlength="[[minPasswordLength]]"
-          error-message="Senha demasiado curta"
           auto-validate
         >
         </paper-input>
@@ -151,15 +154,15 @@ class AtLogin extends ExternalEntitiesAuth {
       },
       submittedByAccountant: {
         type: Boolean,
-        default: false
+        value: false
       },
       authorizedAccountant: {
         type: Boolean,
-        default: false
+        value: false
       },
       withAccountantPassword: {
         type: Boolean,
-        default: false
+        value: false
       }
     };
   }
@@ -172,6 +175,9 @@ class AtLogin extends ExternalEntitiesAuth {
   }
 
   async getVaultData () {
+    let _originalEntityUsername = this.entityUsername;
+    let _originalaccountantUsername = this.accountantUsername;
+
     try {
       const entityLogin = await this._checkVaultLoginAccess('AT', 'entity');
 
@@ -179,6 +185,8 @@ class AtLogin extends ExternalEntitiesAuth {
         this.entityUsername = entityLogin.username;
         this.entityPassword = this._generateFakePassword();
         this.entityUseFromVault = true;
+        this._readonly = true;
+        this.$.entityUsername.readonly = true;
         this.$.entityPassword.readonly = true;
       } else {
         this._addPassword('AT', 'entity');
@@ -193,10 +201,18 @@ class AtLogin extends ExternalEntitiesAuth {
           this.accountantUsername = accountantLogin.username;
           this.accountantPassword = this._generateFakePassword();
           this.accountantUseFromVault = true;
+          this._readonly = true;
+          this.$.accountantUsername.readonly = true;
           this.$.accountantPassword.readonly = true;
         }
       }
     } catch (error) {
+      this._cdbUnavailable = true;
+      this._resetFieldsToOriginalState(_originalEntityUsername, _originalaccountantUsername);
+
+      if ((this.isAccountant() || this.isCompanyAccountant()) && this.withAccountantPassword) {
+        this.$.containerCheckbox.style.display = 'block';
+      }
     }
   }
 
@@ -209,30 +225,42 @@ class AtLogin extends ExternalEntitiesAuth {
   }
 
   checkCredentials() {
-    let errorMessages = [];
-
     if (this.submittedByAccountant === true) {
       if (this.accountantUsername === null || this.accountantUsername.length === 0) {
-        errorMessages.push('O NIF do contabilista é de preenchimento obrigatório.');
+        this._addError('O NIF do contabilista é de preenchimento obrigatório.');
       }
 
-      if (this.accountantPassword === null || this.accountantPassword.length < this.accountantPassword.minlength) {
+      if (this.accountantPassword === null || this.accountantPassword.length < this.$.accountantPassword.minlength) {
         if (this.accountantPassword.length === 0) {
-          errorMessages.push('A senha do contabilista é de preenchimento obrigatório.');
+          this._addError('A senha do contabilista é de preenchimento obrigatório.');
         } else {
-          errorMessages.push('A senha do contabilista é demasiado curta.');
+          this._addError('A senha do contabilista é demasiado curta.');
         }
       }
     } else {
-      if (this.entityPassword === null || this.entityPassword.length < this.minPasswordLength) {
+      if (this.entityPassword === null || this.entityPassword.length < this.$.entityPassword.minlength) {
         if (this.entityPassword.length === 0) {
-          errorMessages.push('A senha do sujeito passivo é de preenchimento obrigatório.');
+          this._addError('A senha do sujeito passivo é de preenchimento obrigatório.');
         } else {
-          errorMessages.push('A senha do sujeito passivo é demasiado curta.');
+          this._addError('A senha do sujeito passivo é demasiado curta.');
         }
       }
     }
-    return errorMessages;
+  }
+
+  _resetFieldsToOriginalState(originalEntityUsername, originalaccountantUsername) {
+    this._readonly = false;
+    this.entityUsername = originalEntityUsername;
+    this.entityPassword = '';
+    this.entityUseFromVault = false;
+    this.$.entityUsername.readonly = false;
+    this.$.entityPassword.readonly = false;
+
+    this.accountantUsername = originalaccountantUsername;
+    this.accountantPassword = '';
+    this.accountantUseFromVault = false;
+    this.$.accountantUsername.readonly = false;
+    this.$.accountantPassword.readonly = false;
   }
 
   _checkedSubmittedByAccountant(value) {

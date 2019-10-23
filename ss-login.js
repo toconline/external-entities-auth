@@ -39,6 +39,9 @@ class SsLogin extends ExternalEntitiesAuth {
         }
       </style>
 
+      <template is="dom-if" if="[[_readonly]]">
+        <casper-notice type="warning">Para modificar os campos que se encontram bloqueados poderá fazê-lo na opção de menu <i>Senhas da Empresa</i></casper-notice>
+      </template>
       <div class="container-input">
         <paper-input
           id="ssUsername"
@@ -109,6 +112,8 @@ class SsLogin extends ExternalEntitiesAuth {
   }
 
   async getVaultData () {
+    let _originalSsUsername = this.ssUsername;
+
     try {
       const entityLogin = await this._checkVaultLoginAccess('SS', 'entity');
 
@@ -116,26 +121,35 @@ class SsLogin extends ExternalEntitiesAuth {
         this.ssUsername = entityLogin.username;
         this.ssPassword = this._generateFakePassword();
         this.ssUseFromVault = true;
+        this._readonly = true;
+        this.$.ssUsername.readonly = true;
         this.$.ssPassword.readonly = true;
       } else {
         this._addPassword('SS', 'entity');
       }
     } catch (error) {
+      this._cdbUnavailable = true;
+      this._resetFieldsToOriginalState(_originalSsUsername);
     }
   }
 
   checkCredentials() {
-    let errorMessages = [];
-
-    if (this.ssPassword === undefined || this.ssPassword.length < this.ssPassword.minlength) {
+    if (this.ssPassword === null || this.ssPassword.length < this.$.ssPassword.minlength) {
       if (this.ssPassword.length === 0) {
-        errorMessages.push('A senha do segurança social é de preenchimento obrigatório.');
+        this._addError('A senha do segurança social é de preenchimento obrigatório.');
       } else {
-        errorMessages.push('A senha do segurança social é demasiado curta.');
+        this._addError('A senha do segurança social é demasiado curta.');
       }
     }
+  }
 
-    return errorMessages;
+  _resetFieldsToOriginalState(originalSsUsername) {
+    this._readonly = false;
+    this.ssUsername = originalSsUsername;
+    this.ssPassword = '';
+    this.ssUseFromVault = false;
+    this.$.ssUsername.readonly = false;
+    this.$.ssPassword.readonly = false;
   }
 }
 
