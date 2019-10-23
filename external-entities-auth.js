@@ -123,7 +123,7 @@ export class ExternalEntitiesAuth extends PolymerElement {
     if (!this._lockErrorMessages) {
       this._errorMessages.push(message);
     } else {
-      console.log('Do not add more errors. Messages are locked due to the fact that the company is demo');
+      console.log('Do not add more errors. Error messages are locked due to the fact that the company is demo');
     }
   }
 
