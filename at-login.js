@@ -1,4 +1,5 @@
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { ExternalEntitiesAuth } from './external-entities-auth.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
@@ -29,7 +30,7 @@ class AtLogin extends ExternalEntitiesAuth {
           display: none;
         }
 
-        .container-notice {
+        ::slotted(casper-notice) {
           display: flex;
           flex-grow: 2.0;
           flex-direction: column-reverse;
@@ -69,9 +70,9 @@ class AtLogin extends ExternalEntitiesAuth {
           id="entityPassword"
           type="password"
           class="password-input"
-          label="Palavra chave"
+          label="Senha do sujeito passivo"
           value="{{entityPassword}}"
-          error-message="Palavra chave demasiado curta"
+          error-message="Senha demasiado curta"
           minlength="[[minPasswordLength]]"
           auto-validate
         >
@@ -102,17 +103,13 @@ class AtLogin extends ExternalEntitiesAuth {
           class="password-input"
           label="Senha do contabilista"
           value="{{accountantPassword}}"
-          error-message="Palavra chave demasiado curta"
+          error-message="Senha demasiado curta"
           minlength="[[minPasswordLength]]"
           auto-validate
         >
         </paper-input>
       </div>
-      <div class="container-notice">
-        <casper-notice>
-          <slot name="notice"></slot>
-        </casper-notice>
-      </div>
+      <slot name="notice"></slot>
     `;
   }
 
@@ -174,6 +171,17 @@ class AtLogin extends ExternalEntitiesAuth {
     ]
   }
 
+  ready() {
+    super.ready();
+    afterNextRender(this, () => {
+      if (this.parentElement.wizard) {
+        if ((this.isAccountant() || this.isCompanyAccountant()) && this.withAccountantPassword) {
+          this.$.containerCheckbox.style.display = 'block';
+        }
+      }
+    });
+  }
+
   async getVaultData () {
     let _originalEntityUsername = this.entityUsername;
     let _originalaccountantUsername = this.accountantUsername;
@@ -192,9 +200,7 @@ class AtLogin extends ExternalEntitiesAuth {
         this._addPassword('AT', 'entity');
       }
 
-      if ((this.isAccountant() || this.isCompanyAccountant()) && this.withAccountantPassword) {
-        this.$.containerCheckbox.style.display = 'block';
-
+      if (this.isAccountant() && this.withAccountantPassword) {
         const accountantLogin = await this._checkVaultLoginAccess('AT', 'accountant');
 
         if (accountantLogin['auto-login']) {
@@ -209,10 +215,6 @@ class AtLogin extends ExternalEntitiesAuth {
     } catch (error) {
       this._cdbUnavailable = true;
       this._resetFieldsToOriginalState(_originalEntityUsername, _originalaccountantUsername);
-
-      if ((this.isAccountant() || this.isCompanyAccountant()) && this.withAccountantPassword) {
-        this.$.containerCheckbox.style.display = 'block';
-      }
     }
   }
 
@@ -225,6 +227,14 @@ class AtLogin extends ExternalEntitiesAuth {
   }
 
   checkCredentials() {
+    if (!this.authorizedAccountant && (this.entityPassword === null || this.entityPassword.length < this.$.entityPassword.minlength)) {
+      if (this.entityPassword.length === 0) {
+        this._addError('A senha do sujeito passivo é de preenchimento obrigatório.');
+      } else {
+        this._addError('A senha do sujeito passivo é demasiado curta.');
+      }
+    }
+
     if (this.submittedByAccountant === true) {
       if (this.accountantUsername === null || this.accountantUsername.length === 0) {
         this._addError('O NIF do contabilista é de preenchimento obrigatório.');
@@ -235,14 +245,6 @@ class AtLogin extends ExternalEntitiesAuth {
           this._addError('A senha do contabilista é de preenchimento obrigatório.');
         } else {
           this._addError('A senha do contabilista é demasiado curta.');
-        }
-      }
-    } else {
-      if (this.entityPassword === null || this.entityPassword.length < this.$.entityPassword.minlength) {
-        if (this.entityPassword.length === 0) {
-          this._addError('A senha do sujeito passivo é de preenchimento obrigatório.');
-        } else {
-          this._addError('A senha do sujeito passivo é demasiado curta.');
         }
       }
     }
@@ -267,14 +269,14 @@ class AtLogin extends ExternalEntitiesAuth {
     if (value === true) {
       this.$.authorizedAccountant.style.display = 'flex';
       this.$.containerAccountant.style.display = 'flex';
-      if (!this.accountantUseFromVault) {
+      if (!this.accountantUseFromVault && this.isAccountant()) {
         this._addPassword('AT', 'accountant');
       }
     } else {
       this.$.authorizedAccountant.style.display = 'none';
       this.$.containerAccountant.style.display = 'none';
       this.authorizedAccountant = false;
-      if (!this.accountantUseFromVault) {
+      if (!this.accountantUseFromVault && this.isAccountant()) {
         this._removePassword('AT', 'accountant');
       }
     }

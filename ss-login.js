@@ -18,7 +18,7 @@ class SsLogin extends ExternalEntitiesAuth {
           display: flex;
         }
 
-        .container-notice {
+        ::slotted(casper-notice) {
           display: flex;
           flex-grow: 2.0;
           flex-direction: column-reverse;
@@ -59,9 +59,9 @@ class SsLogin extends ExternalEntitiesAuth {
           id="ssPassword"
           type="password"
           class="password-input"
-          label="Palavra chave"
+          label="Senha de acesso"
           value="{{ssPassword}}"
-          error-message="Palavra chave demasiado curta"
+          error-message="Senha demasiado curta"
           minlength="[[minPasswordLength]]"
           auto-validate
           required
@@ -76,11 +76,7 @@ class SsLogin extends ExternalEntitiesAuth {
         maxlength="6"
         required>
       </paper-input>
-      <div class="container-notice">
-        <casper-notice>
-          <slot name="notice"></slot>
-        </casper-notice>
-      </div>
+      <slot name="notice"></slot>
     `;
   }
 
