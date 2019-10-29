@@ -98,6 +98,12 @@ export class ExternalEntitiesAuth extends PolymerElement {
       case 'not_decided':
         try {
           await this._showVaultContract();
+          try {
+            // Need to checkLogin again
+            this._entityAccess = await this._checkVaultEntityAccess();
+          } catch (exception) {
+            this._cdbUnavailable = true;
+          }
         } catch (error) {
           this._cleanStoredPasswords();
           this.withoutVaultAccess = true;
@@ -108,7 +114,7 @@ export class ExternalEntitiesAuth extends PolymerElement {
         this.withoutVaultAccess = true;
         break;
 
-      default:
+      case 'accepted':
         break;
     }
 

@@ -18,7 +18,7 @@ class SsLogin extends ExternalEntitiesAuth {
           display: flex;
         }
 
-        ::slotted(casper-notice) {
+        .at-the-bottom {
           display: flex;
           flex-grow: 2.0;
           flex-direction: column-reverse;
@@ -39,9 +39,6 @@ class SsLogin extends ExternalEntitiesAuth {
         }
       </style>
 
-      <template is="dom-if" if="[[_readonly]]">
-        <casper-notice type="warning">Para modificar os campos que se encontram bloqueados poderá fazê-lo na opção de menu <i>Senhas da Empresa</i></casper-notice>
-      </template>
       <div class="container-input">
         <paper-input
           id="ssUsername"
@@ -76,7 +73,12 @@ class SsLogin extends ExternalEntitiesAuth {
         maxlength="6"
         required>
       </paper-input>
-      <slot name="notice"></slot>
+      <div class="at-the-bottom">
+        <slot name="notice"></slot>
+        <template is="dom-if" if="[[_readonly]]">
+          <casper-notice type="warning">Para modificar os campos que estão bloqueados poderá fazê-lo na opção de menu <i>Senhas da Empresa</i></casper-notice>
+        </template>
+      </div>
     `;
   }
 

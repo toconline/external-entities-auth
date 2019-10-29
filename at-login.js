@@ -29,7 +29,7 @@ class AtLogin extends ExternalEntitiesAuth {
           display: none;
         }
 
-        ::slotted(casper-notice) {
+        .at-the-bottom {
           display: flex;
           flex-grow: 2.0;
           flex-direction: column-reverse;
@@ -51,9 +51,6 @@ class AtLogin extends ExternalEntitiesAuth {
         }
       </style>
 
-      <template is="dom-if" if="[[_readonly]]">
-        <casper-notice type="warning">Para modificar os campos que se encontram bloqueados poderá fazê-lo na opção de menu <i>Senhas da Empresa</i></casper-notice>
-      </template>
       <div class="container-input">
         <paper-input
           id="entityUsername"
@@ -108,7 +105,12 @@ class AtLogin extends ExternalEntitiesAuth {
         >
         </paper-input>
       </div>
-      <slot name="notice"></slot>
+      <div class="at-the-bottom">
+        <slot name="notice"></slot>
+        <template is="dom-if" if="[[_readonly]]">
+          <casper-notice type="warning">Para modificar os campos que estão bloqueados poderá fazê-lo na opção de menu <i>Senhas da Empresa</i></casper-notice>
+        </template>
+      </div>
     `;
   }
 
