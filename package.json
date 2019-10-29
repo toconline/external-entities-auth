@@ -1,6 +1,6 @@
 {
   "name": "@casper2020/external-entities-auth",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "External entities authentication",
   "main": "external-entities-auth.js",
   "dependencies": {
