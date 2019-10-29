@@ -1,5 +1,4 @@
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { ExternalEntitiesAuth } from './external-entities-auth.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
@@ -117,6 +116,10 @@ class AtLogin extends ExternalEntitiesAuth {
     return 'at-login';
   }
 
+  static get entity () {
+    return 'AT';
+  }
+
   static get properties() {
     return {
       entityUsername: {
@@ -171,15 +174,11 @@ class AtLogin extends ExternalEntitiesAuth {
     ]
   }
 
-  ready() {
-    super.ready();
-    afterNextRender(this, () => {
-      if (this.parentElement.wizard) {
-        if ((this.isAccountant() || this.isCompanyAccountant()) && this.withAccountantPassword) {
-          this.$.containerCheckbox.style.display = 'block';
-        }
-      }
-    });
+  async init () {
+    await super.init();
+    if ((this.isAccountant() || this.isCompanyAccountant()) && this.withAccountantPassword) {
+      this.$.containerCheckbox.style.display = 'block';
+    }
   }
 
   async getVaultData () {
@@ -187,7 +186,7 @@ class AtLogin extends ExternalEntitiesAuth {
     let _originalaccountantUsername = this.accountantUsername;
 
     try {
-      const entityLogin = await this._checkVaultLoginAccess('AT', 'entity');
+      const entityLogin = this._entityAccess;
 
       if (entityLogin['auto-login']) {
         this.entityUsername = entityLogin.username;

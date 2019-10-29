@@ -84,6 +84,10 @@ class SsLogin extends ExternalEntitiesAuth {
     return 'ss-login';
   }
 
+  static get entity() {
+    return 'SS';
+  }
+
   static get properties() {
     return {
       ssUsername: {
@@ -111,7 +115,7 @@ class SsLogin extends ExternalEntitiesAuth {
     let _originalSsUsername = this.ssUsername;
 
     try {
-      const entityLogin = await this._checkVaultLoginAccess('SS', 'entity');
+      const entityLogin = this._entityAccess;
 
       if (entityLogin['auto-login']) {
         this.ssUsername = entityLogin.username;
