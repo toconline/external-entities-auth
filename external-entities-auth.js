@@ -9,7 +9,7 @@ export class ExternalEntitiesAuth extends PolymerElement {
     return {
       _savePasswords: {
         type: Array,
-        value: []
+        value: () => []
       },
       _storePasswords: {
         type: Boolean,
@@ -25,7 +25,7 @@ export class ExternalEntitiesAuth extends PolymerElement {
       },
       _errorMessages: {
         type: Array,
-        value: []
+        value: () => []
       },
       _lockErrorMessages: {
         type: Boolean,
@@ -64,6 +64,7 @@ export class ExternalEntitiesAuth extends PolymerElement {
 
   ready () {
     super.ready();
+    console.log("Adding external auth to DOM");
   }
 
   async init () {
