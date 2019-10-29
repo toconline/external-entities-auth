@@ -64,7 +64,6 @@ export class ExternalEntitiesAuth extends PolymerElement {
 
   ready () {
     super.ready();
-    console.log("Adding external auth to DOM");
   }
 
   async init () {
