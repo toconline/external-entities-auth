@@ -67,8 +67,6 @@ export class ExternalEntitiesAuth extends PolymerElement {
   }
 
   async init () {
-    this._errorMessages = []; // Cleanup possible error messages stored in memory
-
     if (this.withDemoRestriction) {
       this._addDemoRestriction();
     }
@@ -97,7 +95,7 @@ export class ExternalEntitiesAuth extends PolymerElement {
     switch (this._entityAccess['status']) {
       case 'not_decided':
         try {
-          await this._showVaultContract();
+          await this.app.vault.showVaultContract();
           try {
             // Need to checkLogin again
             this._entityAccess = await this._checkVaultEntityAccess();
@@ -133,6 +131,7 @@ export class ExternalEntitiesAuth extends PolymerElement {
           reject: 'Não'
         });
         this._storePasswords = true;
+        this.app.invalidatePages('vault');
       } catch (error) {
         this._cleanStoredPasswords();
       }
@@ -172,23 +171,6 @@ export class ExternalEntitiesAuth extends PolymerElement {
 
   async _checkVaultEntityAccess () {
     return await this._checkVaultLoginAccess(this.constructor.entity, 'entity');
-  }
-
-  async _showVaultContract() {
-    await this.app.showWizardWithPromise({
-      append: true,
-      tag_name: 'toconline-vault-contract',
-      contract: {
-        document_name: 'toconline-vault-contract',
-        type: 'gdpr',
-        optional: true,
-        tube: 'toconline-dialog-authorization',
-        payload: {
-          type: 'gdpr',
-          document_name: 'toconline-vault-contract'
-        }
-      }
-    });
   }
 
   _isDemoCompany() {
