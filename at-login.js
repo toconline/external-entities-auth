@@ -201,7 +201,7 @@ class AtLogin extends ExternalEntitiesAuth {
         this._addPassword('AT', 'entity');
       }
 
-      if (this.isAccountant() && this.withAccountantPassword) {
+      if ((this.isAccountant() || this.isCompanyAccountant()) && this.withAccountantPassword) {
         const accountantLogin = await this._checkVaultLoginAccess('AT', 'accountant');
 
         if (accountantLogin['auto-login']) {
