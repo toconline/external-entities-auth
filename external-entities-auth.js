@@ -79,10 +79,6 @@ export class ExternalEntitiesAuth extends PolymerElement {
       return false;
     }
 
-    if (!this.app.vault.allowedAccess()) {
-      return false;
-    }
-
     try {
       this._entityAccess = await this._checkVaultEntityAccess();
     } catch (error) {
@@ -196,13 +192,13 @@ export class ExternalEntitiesAuth extends PolymerElement {
   }
 
   _addPassword(entity, type) {
-    if (!this._cdbUnavailable && this.withVaultAccess) {
+    if (!this._cdbUnavailable && this.withVaultAccess && this._canManagePasswords()) {
       this._savePasswords.push({ entity: entity, type: type });
     }
   }
 
   _removePassword(entity, type) {
-    if (!this._cdbUnavailable && this.withVaultAccess) {
+    if (!this._cdbUnavailable && this.withVaultAccess && this._canManagePasswords()) {
       this._savePasswords.splice(this._savePasswords.findIndex(password => password.entity == entity && password.type == type), 1);
     }
   }
@@ -222,6 +218,10 @@ export class ExternalEntitiesAuth extends PolymerElement {
 
   _computedNegationCondition(value) {
     return !value;
+  }
+
+  _canManagePasswords () {
+    return this.app.vault.allowedAccess();
   }
 }
 
