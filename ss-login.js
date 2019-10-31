@@ -24,6 +24,10 @@ class SsLogin extends ExternalEntitiesAuth {
           flex-direction: column-reverse;
         }
 
+        .at-the-bottom casper-notice {
+          margin-bottom: 10px;
+        }
+
         .login-input {
           margin-right: 1%;
           width: 49%;

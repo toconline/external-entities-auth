@@ -20,7 +20,6 @@ class AtLogin extends ExternalEntitiesAuth {
         }
 
         .container-checkbox {
-          margin-top: 10px;
           display: none;
         }
 
@@ -33,6 +32,10 @@ class AtLogin extends ExternalEntitiesAuth {
           display: flex;
           flex-grow: 2.0;
           flex-direction: column-reverse;
+        }
+
+        .at-the-bottom casper-notice {
+          margin-bottom: 10px;
         }
 
         .login-checkbox {
