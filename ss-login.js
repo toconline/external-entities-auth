@@ -13,6 +13,10 @@ class SsLogin extends ExternalEntitiesAuth {
           height: 100%;
         }
 
+        #authorizedAgent {
+          margin-top: 10px;
+        }
+
         .container-input {
           height: 80px;
           display: flex;
@@ -77,6 +81,9 @@ class SsLogin extends ExternalEntitiesAuth {
         maxlength="6"
         required>
       </paper-input>
+      <paper-checkbox id="authorizedAgent" checked="{{authorizedAgent}}">
+        Declaração entregue por mandatário
+      </paper-checkbox>
       <div class="at-the-bottom">
         <slot name="notice"></slot>
         <template is="dom-if" if="[[_readonly]]">
@@ -113,29 +120,32 @@ class SsLogin extends ExternalEntitiesAuth {
       },
       seqNumber: {
         type: Number
+      },
+      authorizedAgent: {
+        type: Boolean,
+        value: false,
+        observer: '_checkedAuthorizedAgent'
       }
     };
   }
 
-  async getVaultData () {
-    let _originalSsUsername = this.ssUsername;
+  async init() {
+    await super.init();
+    this._originalSsUsername = this.ssUsername;
+  }
 
-    try {
-      const entityLogin = this._entityAccess;
+  getVaultData () {
+    const entityLogin = this._entityAccess;
 
-      if (entityLogin['auto-login']) {
-        this.ssUsername = entityLogin.username;
-        this.ssPassword = this._generateFakePassword();
-        this.ssUseFromVault = true;
-        this._readonly = true;
-        this.$.ssUsername.readonly = true;
-        this.$.ssPassword.readonly = true;
-      } else {
-        this._addPassword('SS', 'entity');
-      }
-    } catch (error) {
-      this._cdbUnavailable = true;
-      this._resetFieldsToOriginalState(_originalSsUsername);
+    if (entityLogin['auto-login']) {
+      this.ssUsername = entityLogin.username;
+      this.ssPassword = this._generateFakePassword();
+      this.ssUseFromVault = true;
+      this._readonly = true;
+      this.$.ssUsername.readonly = true;
+      this.$.ssPassword.readonly = true;
+    } else {
+      this._addPassword('SS', 'entity');
     }
   }
 
@@ -146,6 +156,43 @@ class SsLogin extends ExternalEntitiesAuth {
       } else {
         this._addError('A senha do segurança social é demasiado curta.');
       }
+    }
+  }
+
+  async _checkedAuthorizedAgent(newValue, oldValue) {
+    // This only should occur on the first default value assignment to authorizedAgent
+    if (oldValue === undefined) {
+      return true;
+    }
+
+    if (this.withoutVaultAccess) {
+      return true;
+    }
+
+    this._resetFieldsToOriginalState(this._originalSsUsername);
+
+    if (newValue) {
+      this._removePassword('SS', 'entity');
+      try {
+        const entityLogin = await this._checkVaultLoginAccess('SSMT', 'entity');
+
+        if (entityLogin['auto-login']) {
+          this.ssUsername = entityLogin.username;
+          this.ssPassword = this._generateFakePassword();
+          this.ssUseFromVault = true;
+          this._readonly = true;
+          this.$.ssUsername.readonly = true;
+          this.$.ssPassword.readonly = true;
+        } else {
+          this._addPassword('SSMT', 'entity');
+        }
+      } catch (error) {
+        this._cdbUnavailable = true;
+        this._resetFieldsToOriginalState(this._originalSsUsername);
+      }
+    } else {
+      this._removePassword('SSMT', 'entity');
+      this.getVaultData();
     }
   }
 
