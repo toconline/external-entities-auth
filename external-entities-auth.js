@@ -67,6 +67,8 @@ export class ExternalEntitiesAuth extends PolymerElement {
   }
 
   async init () {
+    this._entityType = this.constructor.entity;
+
     if (this.withDemoRestriction) {
       this._addDemoRestriction();
     }
@@ -152,6 +154,10 @@ export class ExternalEntitiesAuth extends PolymerElement {
     return _messages;
   }
 
+  getActiveEntityType () {
+    return this._entityType;
+  }
+
   _addError(message) {
     if (!this._lockErrorMessages) {
       this._errorMessages.push(message);
@@ -166,7 +172,7 @@ export class ExternalEntitiesAuth extends PolymerElement {
   }
 
   async _checkVaultEntityAccess () {
-    return await this._checkVaultLoginAccess(this.constructor.entity, 'entity');
+    return await this._checkVaultLoginAccess(this._entityType, 'entity');
   }
 
   _isDemoCompany() {

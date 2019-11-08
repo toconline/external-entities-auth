@@ -173,6 +173,7 @@ class SsLogin extends ExternalEntitiesAuth {
 
     if (newValue) {
       this._removePassword('SS', 'entity');
+      this._entityType = 'SSMT';
       try {
         const entityLogin = await this._checkVaultLoginAccess('SSMT', 'entity');
 
@@ -191,6 +192,7 @@ class SsLogin extends ExternalEntitiesAuth {
         this._resetFieldsToOriginalState(this._originalSsUsername);
       }
     } else {
+      this._entityType = this.constructor.entity;
       this._removePassword('SSMT', 'entity');
       this.getVaultData();
     }
