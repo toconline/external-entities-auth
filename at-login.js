@@ -193,7 +193,7 @@ class AtLogin extends ExternalEntitiesAuth {
     try {
       const entityLogin = this._entityAccess;
 
-      if (entityLogin['auto-login']) {
+      if (entityLogin['auto-login'] && entityLogin['status'] == 'accepted') {
         this.entityUsername = entityLogin.username;
         this.entityPassword = this._generateFakePassword();
         this.entityUseFromVault = true;
@@ -207,7 +207,7 @@ class AtLogin extends ExternalEntitiesAuth {
       if ((this.isAccountant() || this.isCompanyAccountant()) && this.withAccountantPassword) {
         const accountantLogin = await this._checkVaultLoginAccess('AT', 'accountant');
 
-        if (accountantLogin['auto-login']) {
+        if (accountantLogin['auto-login'] && accountantLogin['status'] == 'accepted') {
           this.accountantUsername = accountantLogin.username;
           this.accountantPassword = this._generateFakePassword();
           this.accountantUseFromVault = true;

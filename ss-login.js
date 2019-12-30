@@ -137,7 +137,7 @@ class SsLogin extends ExternalEntitiesAuth {
   getVaultData () {
     const entityLogin = this._entityAccess;
 
-    if (entityLogin['auto-login']) {
+    if (entityLogin['auto-login'] && entityLogin['status'] == 'accepted') {
       this.ssUsername = entityLogin.username;
       this.ssPassword = this._generateFakePassword();
       this.ssUseFromVault = true;
@@ -177,7 +177,7 @@ class SsLogin extends ExternalEntitiesAuth {
       try {
         const entityLogin = await this._checkVaultLoginAccess('SSMT', 'entity');
 
-        if (entityLogin['auto-login']) {
+        if (entityLogin['auto-login'] && entityLogin['status'] == 'accepted') {
           this.ssUsername = entityLogin.username;
           this.ssPassword = this._generateFakePassword();
           this.ssUseFromVault = true;
