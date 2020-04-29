@@ -79,9 +79,10 @@ class SsLogin extends ExternalEntitiesAuth {
         value="{{seqNumber}}"
         allowed-pattern="[0-9]"
         maxlength="6"
-        required>
+        required
+        hidden$=[[ssSimpleMode]]>
       </paper-input>
-      <paper-checkbox id="authorizedAgent" checked="{{authorizedAgent}}">
+      <paper-checkbox id="authorizedAgent" checked="{{authorizedAgent}}" hidden$=[[ssSimpleMode]]>
         Declaração entregue por mandatário
       </paper-checkbox>
       <div class="at-the-bottom">
@@ -125,6 +126,10 @@ class SsLogin extends ExternalEntitiesAuth {
         type: Boolean,
         value: false,
         observer: '_checkedAuthorizedAgent'
+      },
+      ssSimpleMode: {
+        type: Boolean,
+        value: false
       }
     };
   }
