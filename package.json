@@ -1,10 +1,13 @@
 {
-  "name": "@casper2020/external-entities-auth",
+  "name": "@cloudware-casper/external-entities-auth",
   "version": "1.1.2",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "description": "External entities authentication",
   "main": "external-entities-auth.js",
   "dependencies": {
-    "@casper2020/casper-notice": "^1.x",
+    "@cloudware-casper/casper-notice": "^1.x",
     "@polymer/paper-checkbox": "^3.x",
     "@polymer/paper-input": "^3.x",
     "@polymer/polymer": "^3.x"
