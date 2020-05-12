@@ -82,7 +82,7 @@ class SsLogin extends ExternalEntitiesAuth {
         required
         hidden$=[[ssSimpleMode]]>
       </paper-input>
-      <paper-checkbox id="authorizedAgent" checked="{{authorizedAgent}}" hidden$=[[ssSimpleMode]]>
+      <paper-checkbox id="authorizedAgent" checked="{{authorizedAgent}}">
         Declaração entregue por mandatário
       </paper-checkbox>
       <div class="at-the-bottom">
