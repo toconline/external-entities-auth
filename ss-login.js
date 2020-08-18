@@ -135,7 +135,16 @@ class SsLogin extends ExternalEntitiesAuth {
   }
 
   async init() {
+    if (this._entityType !== undefined) {
+      this.__previousEntityType = this._entityType;
+    }
+
     await super.init();
+
+    if (this.__previousEntityType !== undefined) {
+      this._entityType = this.__previousEntityType;
+    }
+
     this._originalSsUsername = this.ssUsername;
   }
 
