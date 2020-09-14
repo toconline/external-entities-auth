@@ -75,10 +75,10 @@ class SsLogin extends ExternalEntitiesAuth {
       </div>
       <paper-input
         class="sequence-input"
-        label="Número de sequência do ficheiro a substitituir"
+        label="Número de sequência do ficheiro a substituir"
         value="{{seqNumber}}"
         allowed-pattern="[0-9]"
-        maxlength="6"
+        maxlength="20"
         required
         hidden$=[[ssSimpleMode]]>
       </paper-input>
