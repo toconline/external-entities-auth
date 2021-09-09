@@ -7,7 +7,7 @@
   "description": "External entities authentication",
   "main": "external-entities-auth.js",
   "dependencies": {
-    "@cloudware-casper/casper-notice": "^1.x",
+    "@cloudware-casper/casper-notice": "^2.x",
     "@polymer/paper-checkbox": "^3.x",
     "@polymer/paper-input": "^3.x",
     "@polymer/polymer": "^3.x"
