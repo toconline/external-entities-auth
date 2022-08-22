@@ -15,6 +15,7 @@ class SsLogin extends ExternalEntitiesAuth {
 
         #authorizedAgent {
           margin-top: 10px;
+          display: none;
         }
 
         .container-input {
@@ -127,6 +128,10 @@ class SsLogin extends ExternalEntitiesAuth {
         value: false,
         observer: '_checkedAuthorizedAgent'
       },
+      withAuthorizedAgent: {
+        type: Boolean,
+        value: false
+      },
       ssSimpleMode: {
         type: Boolean,
         value: false
@@ -146,6 +151,10 @@ class SsLogin extends ExternalEntitiesAuth {
     }
 
     this._originalSsUsername = this.ssUsername;
+
+    if (this.withAuthorizedAgent) {
+      this.$.authorizedAgent.style.display = 'block';
+    }
   }
 
   getVaultData () {
