@@ -18,7 +18,7 @@
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 import { ExternalEntitiesAuth } from './external-entities-auth.js';
 import '@polymer/paper-input/paper-input.js';
-import '@cloudware-casper/casper-notice/casper-notice.js';
+import '@toconline/casper-notice/casper-notice.js';
 
 class SsLogin extends ExternalEntitiesAuth {
   static get template() {
